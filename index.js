@@ -47,13 +47,19 @@ async function run() {
             res.send(result);
         });
 
+        app.post('/jobs', async (req, res) => {
+            const newJob = req.body;
+            const result = await jobsCollection.insertOne(newJob);
+            res.send(result);
+        })
+
         // get all data, get one data, get some data [o, 1, many]
         app.get('/job-application', async (req, res) => {
             const email = req.query.email;
             const query = { applicant_email: email }
             const result = await jobApplicationCollection.find(query).toArray();
 
-            // fokira way to aggregate data
+            // normal way to aggregate data
             for (const application of result) {
                 console.log(application.job_id)
                 const query1 = { _id: new ObjectId(application.job_id) }
